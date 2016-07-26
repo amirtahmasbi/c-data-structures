@@ -7,10 +7,15 @@
 
 #include "targetver.h"
 
+// TODO: reference additional headers your program requires here
 #include <stdio.h>
 #include <stdlib.h>
 #include <tchar.h>
 
 
-
-// TODO: reference additional headers your program requires here
+// create a node (the building block of a singly linked list)
+struct Node
+{
+	int Data;
+	struct Node *Next;
+};

@@ -5,16 +5,12 @@
 
 #define length(x) (sizeof(x)/sizeof(x[0]))
 
-// create a node (the building block of a singly linked list)
-struct Node
-{
-	int Data;
-	struct Node *Next;
-};
+// create a global pointer to the head of the linked list
+struct Node *head = NULL;
 
 
 // insert a node at the begining of a linked list
-Node* insertFirst(struct Node *head, int data)
+void insertFirst(int data)
 {
 	// create a node in the heap memory
 	struct Node *temp = (struct Node*)malloc(sizeof(struct Node));
@@ -25,11 +21,11 @@ Node* insertFirst(struct Node *head, int data)
 
 	// insert temp at the first place 
 	head = temp;
-	return head;
+	return;
 }
 
 // remove the first node of a linked list
-Node* removeFirst(struct Node *head)
+void removeFirst()
 {
 	// save the address to the current head
 	struct Node *temp = head;
@@ -38,11 +34,11 @@ Node* removeFirst(struct Node *head)
 
 	// free the memory
 	free(temp);
-	return head;
+	return;
 }
 
 // insert a node at the end of a linked list
-void insertLast(struct Node* head, int data)
+void insertLast(int data)
 {
 	// create a node in the heap memory
 	struct Node *temp = (struct Node*)malloc(sizeof(struct Node));
@@ -50,69 +46,112 @@ void insertLast(struct Node* head, int data)
 	temp->Next = NULL;
 
 	// create a current pointer for traversal
-	while (head->Next != NULL)
-		head = head->Next;
+	struct Node *current = head;
+	while (current->Next != NULL)
+		current = current->Next;
 
 	// insert temp at the end
-	head->Next = temp;
+	current->Next = temp;
 	return;
 }
 
 // remove the last node of a linked list
-void removeLast(struct Node* head)
+void removeLast()
 {
 	// create a current pointer for traversal
-	while (head->Next->Next != NULL)
-		head = head->Next;
+	struct Node *current = head;
+	while (current->Next->Next != NULL)
+		current = current->Next;
 
-	// create a node in the heap memory
-	struct Node *temp = head->Next;
-	head->Next = NULL;
+	// define a pointer to the last element
+	struct Node *temp = current->Next;
+	current->Next = NULL;
 	free(temp);
 	return;
 }
 
 // insert data at the xth position of a linked list
-void insertAt(struct Node* head, int data, int x)
+void insertAt(int x, int data)
 {
-	// create a node in the heap memory
+	// create a node in the heap memory and initialize it
 	struct Node *temp = (struct Node*)malloc(sizeof(struct Node));
 	temp->Next = NULL;
 	temp->Data = data;
-	// create a pointer to the linked list positions
-	//struct Node *counter = head;
+
+	// set the first element
+	if (x == 0)
+	{
+		temp->Next = head;
+		head = temp;
+		return;
+	}
+
+	// create a current pointer for traversal
+	struct Node *current = head;
 	// find the right position
 	for (int i = 0; i < x-1; i++)
-	{
-		if (head->Next == NULL)
-		{
-			printf("The last index in the linked list %d is smaller than the target index %d.\n", i, x);
-			return;
-		}
-		else
-			head = head->Next;
-	}
-	if (head->Next != NULL)
-		// copy the address of the next node in temp
-		temp->Next = head->Next;
+			current = current->Next;
+
+	// copy the address of the next node in temp
+	temp->Next = current->Next;
 
 	// insert temp after counter 
-	head->Next = temp;
+	current->Next = temp;
+}
+
+
+// reverse the linked list
+void reverse()
+{
+	struct Node *current = head;
+	struct Node *prev = NULL;
+	struct Node *next = NULL;
+
+	while (current != NULL)
+	{
+		next = current->Next;
+		current->Next = prev;
+		prev = current;
+		current = next;
+
+	}
+	head = prev;
 	return;
 }
 
 // print all elements of a linked list
-void printAll(struct Node* head)
+void printAll()
 {
 	printf("Printing linked list element in direct order: \n");
-	//struct Node *current = Head;
-	while (head != NULL)
+	struct Node *current = head;
+	while (current != NULL)
 	{
-		printf("%d ", head->Data);
-		head = head->Next;
+		printf("%d ", current->Data);
+		current = current->Next;
 	}
 	printf("\n");
 	return;
+}
+
+// print all elements of a linked list
+void print(struct Node *p)
+{
+	if (p == NULL)
+	{
+		printf("\n");
+		return;
+	}
+	printf("%d ", p->Data);
+	print(p->Next);
+}
+
+// print all elements of a linked list
+void reversePrint(struct Node *p)
+{
+	if (p == NULL)
+		return;
+	reversePrint(p->Next);
+	printf("%d ", p->Data);
 }
 
 
@@ -122,36 +161,38 @@ int _tmain(int argc, _TCHAR* argv[])
 	// create an array of data
 	int A[] = {12, 54, 2, 9, 120, 3, 11};
 
-	// create a pointer to the head of the linked list
-	struct Node *Head = NULL;
-
 	// initialize the linked list
-	Head = insertFirst(Head, A[0]);
-	for (int i = 1; i < length(A); i++)
-		insertAt(Head, A[i], i);
+	for (int i = 0; i < length(A); i++)
+		insertAt(i, A[i]);
 
 	// print all elements
-	printAll(Head);
+	printAll();
 
 	// remove the first element
-	Head = removeFirst(Head);
-
-	Head = insertFirst(Head, 800);
+	removeFirst();
 
 	// print all elements
-	printAll(Head);
+	printAll();
 
 	// insert at the end 
-	insertLast(Head, 300);
+	insertLast(300);
 
 	// print all elements
-	printAll(Head);
+	printAll();
 
 	// remove the last element 
-	removeLast(Head);
+	removeLast();
+
+	insertFirst(80);
 
 	// print all elements
-	printAll(Head);
+	print(head);
+	reversePrint(head);
+
+	reverse();
+
+	// print all elements
+	printAll();
 
 	getchar();
 	return 0;
