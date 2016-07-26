@@ -41,6 +41,19 @@ int top()
 		return -1;
 }
 
+// size method
+int size()
+{
+	int count = 0;
+	struct node *temp = head;
+	while (temp != NULL)
+	{
+		temp = temp->Next;
+		count++;
+	}
+	return count;
+}
+
 // isempty method
 int isempty()
 {
@@ -63,13 +76,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	printf("is the input data.\n");
 	printf("Is the stack empty: %d\n", isempty());
+	printf("The current stack size is: %d\n", size());
 	printf("The last date is: %d\n", pop());
 	printf("The last date is: %d\n", top());
+	printf("The current stack size is: %d\n", size());
 
 	for (int i = 0; i < length(A); i++)
 		printf("%d ", pop());
 
 	printf("\nIs the stack empty: %d\n", isempty());
+	printf("The current stack size is: %d\n", size());
 
 	getchar();
 	return 0;
